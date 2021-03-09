@@ -2,7 +2,6 @@
 
 Bulk download of Chrome-compatible Extensions from the web store.
 
-
 ## Usage
 
 Just launch `chrome-ext-downloader.exe`
