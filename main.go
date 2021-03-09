@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -24,6 +25,7 @@ var (
 
 func readInput() ([]string, error) {
 
+	fmt.Print("\nEnter list of extensions' URLs/IDs, then hit enter. Lines are separated with \\n:  \n\n")
 	var lines []string
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
