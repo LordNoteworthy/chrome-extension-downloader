@@ -23,7 +23,7 @@ const (
 
 type (
 	GlobalArgumentsBody struct {
-		Id          []string `arg:"-i,--extension-id" help:"The extenion ID to download"`
+		Id          []string `arg:"-i,--extension-id" help:"The extension ID to download"`
 		Destination string   `arg:"-o,--download-location" help:"The directory to output the files to"`
 	}
 )
