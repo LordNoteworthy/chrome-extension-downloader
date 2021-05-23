@@ -12,6 +12,8 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+
+	"github.com/alexflint/go-arg"
 )
 
 const (
@@ -19,7 +21,15 @@ const (
 	reExtendionID     = `[a-z]{32}`
 )
 
+type (
+	GlobalArgumentsBody struct {
+		Id          []string `arg:"-i,--extension-id" help:"The extenion ID to download"`
+		Destination string   `arg:"-o,--download-location" help:"The directory to output the files to"`
+	}
+)
+
 var (
+	GlobalArguments        GlobalArgumentsBody
 	errHTTPStatusCodeNotOK = errors.New("http download faile, status code != 200")
 )
 
@@ -160,7 +170,10 @@ func createDownloadURL(extensionList []string) {
 		if err != nil {
 			continue
 		}
-		WriteBytesFile(extensionID+".crx", bytes.NewReader(b))
+
+		dest := GlobalArguments.Destination + "/" + extensionID
+
+		WriteBytesFile(dest+".crx", bytes.NewReader(b))
 
 		// Chrome Extensions (CRX) are ZIP-files with an added header in the
 		// form of magic number + version number + public key length +
@@ -170,17 +183,16 @@ func createDownloadURL(extensionList []string) {
 			continue
 		}
 
-		WriteBytesFile(extensionID+".zip", bytes.NewReader(zipBytes))
+		WriteBytesFile(dest+".zip", bytes.NewReader(zipBytes))
 	}
 
 }
 
 func main() {
+	arg.MustParse(&GlobalArguments)
 
-	extensionList, err := readInput()
-	if err != nil {
-		log.Fatalln(err)
+	if len(os.Args) <= 1 {
+		readInput()
 	}
-
-	createDownloadURL(extensionList)
+	createDownloadURL(GlobalArguments.Id)
 }
